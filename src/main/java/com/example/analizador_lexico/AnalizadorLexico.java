@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 
 public class AnalizadorLexico {
     private boolean status;
-    private ArrayList<String> palabrasReservadas = new ArrayList<>(Arrays.asList("Columna", "FIla", "Contenedor", "Lista", "Button"));
+    private ArrayList<String> palabrasReservadas = new ArrayList<>(Arrays.asList("Columna", "Fila", "Contenedor", "Lista", "Button"));
     private ArrayList<String> caracteresPuntuacion = new ArrayList<>(Arrays.asList("[", "]" ,"(" ,")" ,"\"", "“", "”", ","));
     private Pattern expresionLetra = Pattern.compile("^[a-zA-Z][a-zA-Z]*$");
 
@@ -59,18 +59,21 @@ public class AnalizadorLexico {
         for (char caracter : listaCharCadenda){
             String item = String.valueOf(caracter);
             System.out.println("Item: " + item);
+
             if (!anterior.equals("")){
-                if (puntuacion.contains(String.valueOf(listaCharCadenda[posicionSiguiente])) && expresionLetra.matcher(item).matches()){
-                    correctos.add(aux+item);
-                    aux = "";
-                } else if ((puntuacion.contains(anterior) && puntuacion.contains(item)) || (!puntuacion.contains(anterior) && puntuacion.contains(item))) {
-                    correctos.add(item);
-                    aux = "";
-                } else {
-                    if (contador == listaCharCadenda.length-1){
+                if (!item.equals(" ")){
+                    if ((puntuacion.contains(String.valueOf(listaCharCadenda[posicionSiguiente])) && expresionLetra.matcher(item).matches()) || (!expresionLetra.matcher(String.valueOf(listaCharCadenda[posicionSiguiente])).matches() && !puntuacion.contains(String.valueOf(listaCharCadenda[posicionSiguiente])))){
                         correctos.add(aux+item);
+                        aux = "";
+                    } else if ((puntuacion.contains(anterior) && puntuacion.contains(item)) || (!puntuacion.contains(anterior) && puntuacion.contains(item)) || (!expresionLetra.matcher(item).matches() && !puntuacion.contains(item))) {
+                        correctos.add(item);
+                        aux = "";
                     } else {
-                        aux = aux+item;
+                        if (contador == listaCharCadenda.length-1){
+                            correctos.add(aux+item);
+                        } else {
+                            aux = aux+item;
+                        }
                     }
                 }
             } else {
@@ -78,6 +81,8 @@ public class AnalizadorLexico {
                 if( (puntuacion.contains(item) || expresionLetra.matcher(item).matches()) && contador == listaCharCadenda.length-1){
                     correctos.add(item);
                 } else if (expresionLetra.matcher(item).matches() && puntuacion.contains(String.valueOf(listaCharCadenda[posicionSiguiente]))){ // en caso de que haya un dato siguiente y no sea letra
+                    correctos.add(item);
+                } else if(!expresionLetra.matcher(item).matches() && !puntuacion.contains(item)){
                     correctos.add(item);
                 } else {
                     aux = aux + item;

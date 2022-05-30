@@ -35,7 +35,8 @@ public class Controller {
 
     @FXML
     private void validarEntrada(){
-        String entrada = idEntrada.getText().replace(" ",""); // Se eliminan los espacios de la entrada
+        //String entrada = idEntrada.getText().replace(" ",""); // Se eliminan los espacios de la entrada
+        String entrada =idEntrada.getText();
         if (entrada.length() > 0){
             labelStatus.setText("");
             paneLista.setVisible(true);
@@ -61,7 +62,7 @@ public class Controller {
                 labelStatus.setText("Entrada correcta");
                 labelStatus.setStyle("-fx-text-fill: GREEN");
             } else {
-                labelStatus.setText("Hay caracteres incorrectos");
+                labelStatus.setText("Entrada incorrecta");
                 labelStatus.setStyle("-fx-text-fill: RED");
                 if (listaValidados.isEmpty()){
                     System.out.println("No hay");
